@@ -105,7 +105,7 @@ $(document).ready(function() {
   setInterval(function() {
     //color in divs
         // shift all colors down
-    $("#scoreboard").text("$ " + amount_earned)
+    $("#scoreboard").text("$ " + amount_earned.toFixed(3))
     for (var row = gameboardHeight/gridcellHeight-1; row>0; row--){
       for (var col=0; col <gameboardWidth/gridcellWidth; col++){
         var colorAbove = $("#gridcell_" + col + "_" + (row - 1)).css("background-color");
@@ -131,6 +131,29 @@ $(document).ready(function() {
         $("#gridcell_" + frcol + "_0").css("background-color", board_color);
       }
     }
+    // collision detection
+    var check_bottom_row = 0;
+    if (offset + gameboardHeight/gridcellHeight > board.length) {
+      check_bottom_row = (offset + gameboardHeight/gridcellHeight)%board.length;
+      //console.log("too much");
+    }
+    else if (offset + gameboardHeight/gridcellHeight < board.length) {
+      check_bottom_row = offset + gameboardHeight/gridcellHeight;
+      //console.log("within reach");
+    }
+    // console.log("offset " + offset);
+    // console.log("check bottom row is " + check_bottom_row);
+    // console.log("ship location is " + ship_location);
+    // console.log(board[check_bottom_row]);
+    if ((board[check_bottom_row])[ship_location] == 1) {
+      alert("Game Over.");
+      document.getElementById("amount_earned").value = amount_earned;
+      document.getElementById("time_elapsed").value = time_elapsed;
+      document.forms["mturk_form"].submit();
+    }
+
+
+    // change offset to shirt board down
     if (offset == 0) {
       offset = board.length-1;
     }
@@ -142,15 +165,21 @@ $(document).ready(function() {
     // increment time and money
     if(gameover == false && time_elapsed != 0 && (amount_earned%2 == 0)){
       amount_earned += 0.001;
-      time_elapsed = count + .5;
+      time_elapsed = count++;
     }
 
     if (amount_earned==2) {
       alert("Congratulations. You have beat the game.");
+      document.getElementById("amount_earned").value = amount_earned;
+      document.getElementById("time_elapsed").value = time_elapsed;
+      document.forms["mturk_form"].submit();
     }
 
     if (gameover) {
       alert("Game Over.")
+      document.getElementById("amount_earned").value = amount_earned;
+      document.getElementById("time_elapsed").value = time_elapsed;
+      document.forms["mturk_form"].submit();
       clearInterval();
     }
 
