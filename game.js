@@ -163,7 +163,7 @@ $(document).ready(function() {
     //console.log("offset is " + offset);
 
     // increment time and money
-    if(gameover == false && time_elapsed != 0 && (amount_earned%2 == 0)){
+    if(gameover == false && time_elapsed != 0 && (amount_earned<2)){
       amount_earned += 0.001;
       time_elapsed = count++;
     }
